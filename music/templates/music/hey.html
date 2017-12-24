@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Significance CalC</title>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script>
+        var app = angular.module("myapp",[]);
+        app.factory("myfactory",()=>{
+        var obj = {
+        x1:0,x2:0,y1:0,y2:0,
+            cval(){
+                   if(this.x1<15){
+                   return true;}
+                          else if(this.y1<15){
+                              return true;
+
+            }},
+
+            calPvalue(){
+                if(this.x1>=15){
+        var r1=parseInt(this.x1)*parseInt(this.x2)/10;
+                    return r1;
+                }
+
+
+        },
+        calSignificance(){
+             if(this.x1>=15){
+        if(this.x1>this.x2){
+        var sig="yes"}
+        else {
+        sig="no"}
+        return sig;
+        }}
+        }
+
+return obj;
+        });
+        app.controller("myctrl",($scope,myfactory)=>{
+        $scope.calculate=()=>{
+            $scope.cflag=false;
+        myfactory.x1=$scope.visitControl;
+        myfactory.x2=$scope.visitVariation;
+        myfactory.y1=$scope.conversionControl;
+        myfactory.y2=$scope.conversionVariation;
+        $scope.pvalue=myfactory.calPvalue();
+
+            $scope.cflag=myfactory.cval();
+            $scope.significance=myfactory.calSignificance();
+             $(".data").html('pvaue:'+$scope.pvalue +'   significance:'+$scope.significance);
+        }
+        });
+    </script>
+</head>
+<body ng-app="myapp">
+<div ng-controller="myctrl">
+<fieldset>
+    <legend>A/B split Significance Calculator</legend>
+    <h1 ng-show="cflag">Control value must be greater than 15!</h1>
+   <table>
+       <col width="150">
+    <tr>
+        <td colspan=""></td>
+        <td>Control</td>
+        <td>Variation</td>
+    </tr>
+    <br>
+    <tr>
+        <td>No Of Visitors:</td>
+        <td><input type="text" name="visCon" ng-model="visitControl"></td>
+        <td><input type="text" name="visVar" ng-model="visitVariation"></td>
+    </tr>
+       <tr>
+        <td>No Of Conversions:</td>
+        <td><input type="text" name="conCon" ng-model="conversionControl"></td>
+        <td><input type="text" name="conVar" ng-model="conversionVariation"></td>
+    </tr>
+
+   </table>
+    <button name="calculate" ng-click="calculate()">Calculate</button>
+    <br>
+    <br>
+
+        <div class="data" ng-hide="cflag"></div>
+
+
+</fieldset>
+</div>
+</body>
+</html>
